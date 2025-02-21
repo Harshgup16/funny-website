@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Paw Clicker</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+            font-family: Arial, sans-serif;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .paw-button {
+            width: 150px;
+            height: 150px;
+            background-color: #ffa500;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.1s;
+            margin: 20px 0;
+        }
+        .paw-button:active {
+            transform: scale(0.95);
+        }
+        .paw-button::before {
+            content: "🐾";
+            font-size: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .counter, .timer {
+            font-size: 24px;
+            color: #333;
+            margin: 10px 0;
+        }
+        .message {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 200px;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4caf50;
+            transition: width 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="counter">Taps: <span id="tap-count">0</span></div>
+        <div class="timer">Time: <span id="time-left">0</span>s</div>
+        <button class="paw-button" id="paw-button"></button>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="message" id="message">Tap the paw to start!</div>
+    </div>
+
+    <script>
+        const pawButton = document.getElementById('paw-button');
+        const tapCount = document.getElementById('tap-count');
+        const timeLeft = document.getElementById('time-left');
+        const message = document.getElementById('message');
+        const progress = document.getElementById('progress');
+        let count = 0;
+        let timer;
+        let gameStarted = false;
+        const requiredTaps = Math.floor(Math.random() * (80 - 50 + 1)) + 50; // Random number between 50 and 80
+        const timeLimit = Math.floor(Math.random() * (15 - 10 + 1)) + 10; // Random number between 10 and 15 seconds
+
+
+
+        pawButton.addEventListener('click', () => {
+            if (!gameStarted) {
+                startGame();
+            }
+
+            count++;
+            tapCount.textContent = count;
+            updateProgress();
+
+            if (count >= requiredTaps) {
+                endGame(true);
+            }
+        });
+
+        function startGame() {
+            gameStarted = true;
+            count = 0;
+            tapCount.textContent = count;
+            timeLeft.textContent = timeLimit;
+            message.textContent = "Tap quickly!";
+            updateProgress();
+
+            timer = setInterval(() => {
+                timeLeft.textContent = parseInt(timeLeft.textContent) - 1;
+                if (parseInt(timeLeft.textContent) <= 0) {
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        function endGame(win) {
+            clearInterval(timer);
+            gameStarted = false;
+
+            if (win) {
+                message.textContent = "Great job! Redirecting...";
+                setTimeout(() => {
+                    window.location.href = "chat.html";
+                }, 0);
+            } else {
+                message.textContent = "Time's up! Try again.";
+                setTimeout(resetGame, 0);
+            }
+        }
+
+        function resetGame() {
+            count = 0;
+            tapCount.textContent = count;
+            timeLeft.textContent = "0";
+            message.textContent = "Tap the paw to start!";
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressPercentage = (count / requiredTaps) * 100;
+            progress.style.width = `${progressPercentage}%`;
+        }
+    </script>
+</body>
+</html>

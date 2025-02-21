@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Scrambled Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Pixelify+Sans:wght@400..700&family=Playpen+Sans:wght@100..800&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0;
+            font-family: "Pixelify Sans", serif,'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            cursor: none; /* Hide default cursor */
+        }
+
+        .word {
+            position: absolute;
+            transform-origin: center;
+            transition: transform 0.3s;
+            user-select: none;
+        }
+
+        .real-start {
+            color: #000000;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .fake-start {
+            color: #423737;
+            font-weight: bold;
+            opacity: 0.9;
+        }
+
+        /* Custom cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            background: transparent;
+            border: 2px solid #333;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* pH Level Indicator */
+        .ph-meter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 300px;
+            background: linear-gradient(
+                to bottom,
+                #ff0000,
+                #ff7700,
+                #ffff00,
+                #00ff00,
+                #0000ff,
+                #4b0082,
+                #8f00ff
+            );
+            border-radius: 10px;
+            z-index: 1000;
+        }
+
+        .ph-indicator {
+            width: 50px;
+            height: 4px;
+            background: #fff;
+            position: absolute;
+            right: -5px;
+            transform: translateY(-50%);
+            transition: top 0.3s ease;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .ph-value {
+            position: absolute;
+            right: 60px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="ph-meter">
+        <div class="ph-indicator">
+            <div class="ph-value">pH 7</div>
+        </div>
+    </div>
+
+    <script>
+        const lorem = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
+        molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
+        numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
+        optio, eaque rerum! Provident similique babu nemo autem. Veritatis
+        obcaecati tenetur iure eius earum ut harsh architecto voluptate aliquam
+        nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit,
+        tenetur tommy, harum nesciunt ipsum debitis quas aliquid. Reprehenderit,
+        quia. Quo neque error repudiandae fuga? Ipsa paarth molestias eos 
+        sapiente officiis modi at sunt excepturi expedita sint? Sed quibusdam
+        recusandae alias error harum maxime adipisci amet tattu quas aliquid. Reprehenderit,
+        quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos 
+        sapiente officiis modi at sunt excepturi hk sint? Sed quibusdam
+        recusandae alias error harum maxime adipisci amet laborum..`;
+
+        // Split lorem text into words
+        const words = lorem.split(' ');
+
+        // Add fake START words
+        const fakeStarts = ['STAGT', 'STRAT', 'STAPT', 'STAR', 'STAAT'];
+        words.push(...fakeStarts);
+
+        // Create and position words
+        function createWords() {
+            document.body.innerHTML = ''; // Clear previous words
+            const cursor = document.createElement('div');
+            cursor.className = 'cursor';
+            document.body.appendChild(cursor);
+
+            const phMeter = document.createElement('div');
+            phMeter.className = 'ph-meter';
+            const phIndicator = document.createElement('div');
+            phIndicator.className = 'ph-indicator';
+            const phValue = document.createElement('div');
+            phValue.className = 'ph-value';
+            phIndicator.appendChild(phValue);
+            phMeter.appendChild(phIndicator);
+            document.body.appendChild(phMeter);
+
+            // Create real START button
+            const realStart = document.createElement('div');
+            realStart.textContent = 'START';
+            realStart.className = 'word real-start';
+            realStart.style.left = `${Math.random() * 6 + 20}%`;
+            realStart.style.top = `${Math.random() * 6 + 20}%`;
+            realStart.addEventListener('click', () => {
+                window.location.href = 'pet-button.html';
+            });
+            document.body.appendChild(realStart);
+
+            // Create other words
+            words.forEach((word) => {
+                if (word.trim()) {
+                    const div = document.createElement('div');
+                    div.textContent = word;
+                    div.className = `word ${word === 'START' ? 'fake-start' : ''}`;
+                    
+                    // Random position
+                    div.style.left = Math.random() * 90 + '%';
+                    div.style.top = Math.random() * 90 + '%';
+                    
+                    // Random size
+                    const size = Math.random() * 20 + 10;
+                    div.style.fontSize = `${size}px`;
+                    
+                    // Random rotation
+                    const rotation = Math.random() * 360;
+                    div.style.transform = `rotate(${rotation}deg)`;
+                    
+                    // Random animation
+                    const duration = Math.random() * 5 + 2;
+                    div.style.animation = `spin ${duration}s linear infinite`;
+                    
+                    document.body.appendChild(div);
+                    
+                    // Add continuous random movement
+                    setInterval(() => {
+                        const newRotation = Math.random() * 360;
+                        div.style.transform = `rotate(${newRotation}deg)`;
+                    }, duration * 1000);
+                }
+            });
+        }
+
+        // Custom cursor and pH meter logic
+        document.addEventListener('mousemove', (e) => {
+            const cursor = document.querySelector('.cursor');
+            const phIndicator = document.querySelector('.ph-indicator');
+            const phValue = document.querySelector('.ph-value');
+            const realStart = document.querySelector('.real-start');
+
+            // Move custom cursor
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+
+            // Calculate distance to real START button
+            if (realStart) {
+                const rect = realStart.getBoundingClientRect();
+                const startX = rect.left + rect.width / 2;
+                const startY = rect.top + rect.height / 2;
+                const distance = Math.hypot(e.clientX - startX, e.clientY - startY);
+                
+                // Convert distance to pH scale (0-14)
+                const maxDistance = Math.hypot(window.innerWidth, window.innerHeight) / 2;
+                const pH = 14 - (distance / maxDistance * 14);
+                
+                // Update pH meter
+                const percentage = (pH / 14) * 100;
+                phIndicator.style.top = `${100 - percentage}%`;
+                phValue.textContent = `pH ${pH.toFixed(1)}`;
+
+                // Update cursor size based on proximity
+                const cursorSize = Math.max(20, 50 - (distance / maxDistance) * 30);
+                cursor.style.width = cursorSize + 'px';
+                cursor.style.height = cursorSize + 'px';
+                cursor.style.left = e.clientX - cursorSize/2 + 'px';
+                cursor.style.top = e.clientY - cursorSize/2 + 'px';
+            }
+        });
+
+        // Initialize
+        createWords();
+
+        // Recreate words periodically
+        setInterval(createWords, 10000); // Recreate every 10 seconds
+    </script>
+</body>
+</html>
