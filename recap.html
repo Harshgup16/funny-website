@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totally Legit reCAPTCHA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .recaptcha-container {
+            background-color: white;
+            border: 1px solid #d3d3d3;
+            border-radius: 3px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        #not-a-robot {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="recaptcha-container">
+        <h2>Prove you're not a robot</h2>
+        <div class="checkbox-container">
+            <input type="checkbox" id="not-a-robot">
+            <label for="not-a-robot">I'm not a robot</label>
+        </div>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        const checkbox = document.getElementById('not-a-robot');
+        const message = document.getElementById('message');
+        const rickrollCommand = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Copy command to clipboard
+                navigator.clipboard.writeText(rickrollCommand).then(() => {
+                    message.textContent = 'Verification successful! Check your clipboard for a surprise. 😉';
+                    
+                    // Redirect after 5 seconds
+                    setTimeout(() => {
+                        window.location.href = 'pet-button.html';
+                    }, 7000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
