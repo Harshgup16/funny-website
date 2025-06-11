@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Scrambled Challenge</title>
     <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Pixelify+Sans:wght@400..700&family=Playpen+Sans:wght@100..800&display=swap" rel="stylesheet">
     <style>
@@ -33,6 +32,7 @@
             color: #000000;
             cursor: pointer;
             z-index: 100;
+            transition: transform 0.3s ease, left 0.6s ease, top 0.6s ease;
         }
 
         .fake-start {
@@ -120,16 +120,15 @@
         sapiente officiis modi at sunt excepturi hk sint? Sed quibusdam
         recusandae alias error harum maxime adipisci amet laborum..`;
 
-        // Split lorem text into words
         const words = lorem.split(' ');
-
-        // Add fake START words
         const fakeStarts = ['STAGT', 'STRAT', 'STAPT', 'STAR', 'STAAT'];
         words.push(...fakeStarts);
 
-        // Create and position words
+        let realStart = null;
+
         function createWords() {
-            document.body.innerHTML = ''; // Clear previous words
+            document.body.innerHTML = '';
+
             const cursor = document.createElement('div');
             cursor.className = 'cursor';
             document.body.appendChild(cursor);
@@ -144,43 +143,45 @@
             phMeter.appendChild(phIndicator);
             document.body.appendChild(phMeter);
 
-            // Create real START button
-            const realStart = document.createElement('div');
+            realStart = document.createElement('div');
             realStart.textContent = 'START';
             realStart.className = 'word real-start';
-            realStart.style.left = `${Math.random() * 6 + 20}%`;
-            realStart.style.top = `${Math.random() * 6 + 20}%`;
+            realStart.style.left = `${Math.random() * 60 + 10}%`;
+            realStart.style.top = `${Math.random() * 60 + 10}%`;
             realStart.addEventListener('click', () => {
                 window.location.href = 'recap.html';
             });
             document.body.appendChild(realStart);
 
-            // Create other words
+            // Add movement logic for real START
+            setInterval(() => {
+                const newLeft = Math.random() * 80 + 10;
+                const newTop = Math.random() * 80 + 10;
+                const newRotation = Math.random() * 360;
+                realStart.style.left = `${newLeft}%`;
+                realStart.style.top = `${newTop}%`;
+                realStart.style.transform = `rotate(${newRotation}deg)`;
+            }, 3000);
+
             words.forEach((word) => {
                 if (word.trim()) {
                     const div = document.createElement('div');
                     div.textContent = word;
                     div.className = `word ${word === 'START' ? 'fake-start' : ''}`;
-                    
-                    // Random position
                     div.style.left = Math.random() * 90 + '%';
                     div.style.top = Math.random() * 90 + '%';
-                    
-                    // Random size
+
                     const size = Math.random() * 20 + 10;
                     div.style.fontSize = `${size}px`;
-                    
-                    // Random rotation
+
                     const rotation = Math.random() * 360;
                     div.style.transform = `rotate(${rotation}deg)`;
-                    
-                    // Random animation
+
                     const duration = Math.random() * 5 + 2;
                     div.style.animation = `spin ${duration}s linear infinite`;
-                    
+
                     document.body.appendChild(div);
-                    
-                    // Add continuous random movement
+
                     setInterval(() => {
                         const newRotation = Math.random() * 360;
                         div.style.transform = `rotate(${newRotation}deg)`;
@@ -189,47 +190,37 @@
             });
         }
 
-        // Custom cursor and pH meter logic
         document.addEventListener('mousemove', (e) => {
             const cursor = document.querySelector('.cursor');
             const phIndicator = document.querySelector('.ph-indicator');
             const phValue = document.querySelector('.ph-value');
-            const realStart = document.querySelector('.real-start');
 
-            // Move custom cursor
             cursor.style.left = e.clientX - 10 + 'px';
             cursor.style.top = e.clientY - 10 + 'px';
 
-            // Calculate distance to real START button
             if (realStart) {
                 const rect = realStart.getBoundingClientRect();
                 const startX = rect.left + rect.width / 2;
                 const startY = rect.top + rect.height / 2;
                 const distance = Math.hypot(e.clientX - startX, e.clientY - startY);
-                
-                // Convert distance to pH scale (0-14)
+
                 const maxDistance = Math.hypot(window.innerWidth, window.innerHeight) / 2;
                 const pH = 14 - (distance / maxDistance * 14);
-                
-                // Update pH meter
+
                 const percentage = (pH / 14) * 100;
                 phIndicator.style.top = `${100 - percentage}%`;
                 phValue.textContent = `pH ${pH.toFixed(1)}`;
 
-                // Update cursor size based on proximity
                 const cursorSize = Math.max(20, 50 - (distance / maxDistance) * 30);
                 cursor.style.width = cursorSize + 'px';
                 cursor.style.height = cursorSize + 'px';
-                cursor.style.left = e.clientX - cursorSize/2 + 'px';
-                cursor.style.top = e.clientY - cursorSize/2 + 'px';
+                cursor.style.left = e.clientX - cursorSize / 2 + 'px';
+                cursor.style.top = e.clientY - cursorSize / 2 + 'px';
             }
         });
 
-        // Initialize
         createWords();
-
-        // Recreate words periodically
-        setInterval(createWords, 7000); // Recreate every 10 seconds
+        setInterval(createWords, 7000);
     </script>
 </body>
 </html>
