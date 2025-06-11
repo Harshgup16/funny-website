@@ -1,226 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scrambled Challenge</title>
-    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Pixelify+Sans:wght@400..700&family=Playpen+Sans:wght@100..800&display=swap" rel="stylesheet">
-    <style>
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0;
-            font-family: "Pixelify Sans", serif,'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-        body {
-            margin: 0;
-            padding: 20px;
-            background: #f0f0f0;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-            cursor: none; /* Hide default cursor */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scrambled Challenge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Pixelify Sans", sans-serif;
+    }
 
-        .word {
-            position: absolute;
-            transform-origin: center;
-            transition: transform 0.3s;
-            user-select: none;
-        }
+    body {
+      background: #f0f0f0;
+      overflow: hidden;
+      cursor: none;
+      padding: 20px;
+    }
 
-        .real-start {
-            color: #000000;
-            cursor: pointer;
-            z-index: 100;
-            transition: transform 0.3s ease, left 0.6s ease, top 0.6s ease;
-        }
+    .word {
+      position: absolute;
+      transform-origin: center;
+      transition: transform 0.3s, left 0.6s, top 0.6s;
+      user-select: none;
+    }
 
-        .fake-start {
-            color: #423737;
-            font-weight: bold;
-            opacity: 0.9;
-        }
+    .real-start {
+      color: #000;
+      cursor: pointer;
+      z-index: 100;
+    }
 
-        /* Custom cursor */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            background: transparent;
-            border: 2px solid #333;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-        }
+    .fake-start {
+      color: #423737;
+      font-weight: bold;
+      opacity: 0.9;
+    }
 
-        /* pH Level Indicator */
-        .ph-meter {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 300px;
-            background: linear-gradient(
-                to bottom,
-                #ff0000,
-                #ff7700,
-                #ffff00,
-                #00ff00,
-                #0000ff,
-                #4b0082,
-                #8f00ff
-            );
-            border-radius: 10px;
-            z-index: 1000;
-        }
+    .cursor {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #333;
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+    }
 
-        .ph-indicator {
-            width: 50px;
-            height: 4px;
-            background: #fff;
-            position: absolute;
-            right: -5px;
-            transform: translateY(-50%);
-            transition: top 0.3s ease;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
+    .ph-meter {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 300px;
+      background: linear-gradient(to bottom, #ff0000, #ff7700, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff);
+      border-radius: 10px;
+      z-index: 1000;
+    }
 
-        .ph-value {
-            position: absolute;
-            right: 60px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
-            transform: translateY(-50%);
-        }
-    </style>
+    .ph-indicator {
+      width: 50px;
+      height: 4px;
+      background: #fff;
+      position: absolute;
+      right: -5px;
+      transform: translateY(-50%);
+      transition: top 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .ph-value {
+      position: absolute;
+      right: 60px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      transform: translateY(-50%);
+    }
+  </style>
 </head>
 <body>
-    <div class="cursor"></div>
-    <div class="ph-meter">
-        <div class="ph-indicator">
-            <div class="ph-value">pH 7</div>
-        </div>
+  <div class="cursor"></div>
+  <div class="ph-meter">
+    <div class="ph-indicator">
+      <div class="ph-value">pH 7</div>
     </div>
+  </div>
 
-    <script>
-        const lorem = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-        molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-        numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
-        optio, eaque rerum! Provident similique babu nemo autem. Veritatis
-        obcaecati tenetur iure eius earum ut harsh architecto voluptate aliquam
-        nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit,
-        tenetur tommy, harum nesciunt ipsum debitis quas aliquid. Reprehenderit,
-        quia. Quo neque error repudiandae fuga? Ipsa paarth molestias eos 
-        sapiente officiis modi at sunt excepturi expedita sint? Sed quibusdam
-        recusandae alias error harum maxime adipisci amet tattu quas aliquid. Reprehenderit,
-        quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos 
-        sapiente officiis modi at sunt excepturi hk sint? Sed quibusdam
-        recusandae alias error harum maxime adipisci amet laborum..`;
+  <script>
+    const words = ['STAGT', 'STRAT', 'STAPT', 'STAR', 'STAAT', 'STAWT', 'STAKT', 'STAPT', 'STAZT', 'START'];
+    let realStart = null;
 
-        const words = lorem.split(' ');
-        const fakeStarts = ['STAGT', 'STRAT', 'STAPT', 'STAR', 'STAAT'];
-        words.push(...fakeStarts);
+    function createWords() {
+      document.querySelectorAll('.word').forEach(el => el.remove());
+      
+      words.forEach(word => {
+        const div = document.createElement('div');
+        div.textContent = word;
+        div.className = 'word';
 
-        let realStart = null;
-
-        function createWords() {
-            document.body.innerHTML = '';
-
-            const cursor = document.createElement('div');
-            cursor.className = 'cursor';
-            document.body.appendChild(cursor);
-
-            const phMeter = document.createElement('div');
-            phMeter.className = 'ph-meter';
-            const phIndicator = document.createElement('div');
-            phIndicator.className = 'ph-indicator';
-            const phValue = document.createElement('div');
-            phValue.className = 'ph-value';
-            phIndicator.appendChild(phValue);
-            phMeter.appendChild(phIndicator);
-            document.body.appendChild(phMeter);
-
-            realStart = document.createElement('div');
-            realStart.textContent = 'START';
-            realStart.className = 'word real-start';
-            realStart.style.left = `${Math.random() * 60 + 10}%`;
-            realStart.style.top = `${Math.random() * 60 + 10}%`;
-            realStart.addEventListener('click', () => {
-                window.location.href = 'recap.html';
-            });
-            document.body.appendChild(realStart);
-
-            // Add movement logic for real START
-            setInterval(() => {
-                const newLeft = Math.random() * 95;
-                const newTop = Math.random() * 95;
-                const newRotation = Math.random() * 360;
-                realStart.style.left = `${newLeft}%`;
-                realStart.style.top = `${newTop}%`;
-                realStart.style.transform = `rotate(${newRotation}deg)`;
-            }, 3000);
-
-            words.forEach((word) => {
-                if (word.trim()) {
-                    const div = document.createElement('div');
-                    div.textContent = word;
-                    div.className = `word ${word === 'START' ? 'fake-start' : ''}`;
-                    div.style.left = Math.random() * 90 + '%';
-                    div.style.top = Math.random() * 90 + '%';
-
-                    const size = Math.random() * 20 + 10;
-                    div.style.fontSize = `${size}px`;
-
-                    const rotation = Math.random() * 360;
-                    div.style.transform = `rotate(${rotation}deg)`;
-
-                    const duration = Math.random() * 5 + 2;
-                    div.style.animation = `spin ${duration}s linear infinite`;
-
-                    document.body.appendChild(div);
-
-                    setInterval(() => {
-                        const newRotation = Math.random() * 360;
-                        div.style.transform = `rotate(${newRotation}deg)`;
-                    }, duration * 1000);
-                }
-            });
+        if (word === 'START') {
+          div.classList.add('real-start');
+          div.addEventListener('click', () => {
+            window.location.href = 'recap.html';
+          });
+          realStart = div;
+        } else {
+          div.classList.add('fake-start');
         }
 
-        document.addEventListener('mousemove', (e) => {
-            const cursor = document.querySelector('.cursor');
-            const phIndicator = document.querySelector('.ph-indicator');
-            const phValue = document.querySelector('.ph-value');
+        // Random initial position, size, and rotation
+        div.style.left = Math.random() * 90 + '%';
+        div.style.top = Math.random() * 90 + '%';
+        div.style.fontSize = `${Math.random() * 20 + 10}px`;
+        div.style.transform = `rotate(${Math.random() * 360}deg)`;
 
-            cursor.style.left = e.clientX - 10 + 'px';
-            cursor.style.top = e.clientY - 10 + 'px';
+        document.body.appendChild(div);
 
-            if (realStart) {
-                const rect = realStart.getBoundingClientRect();
-                const startX = rect.left + rect.width / 2;
-                const startY = rect.top + rect.height / 2;
-                const distance = Math.hypot(e.clientX - startX, e.clientY - startY);
+        // Animate movement every 3 seconds
+        setInterval(() => {
+          div.style.left = Math.random() * 90 + '%';
+          div.style.top = Math.random() * 90 + '%';
+          div.style.transform = `rotate(${Math.random() * 360}deg)`;
+        }, 3000);
+      });
+    }
 
-                const maxDistance = Math.hypot(window.innerWidth, window.innerHeight) / 2;
-                const pH = 14 - (distance / maxDistance * 14);
+    // Custom cursor & pH logic
+    document.addEventListener('mousemove', (e) => {
+      const cursor = document.querySelector('.cursor');
+      const phIndicator = document.querySelector('.ph-indicator');
+      const phValue = document.querySelector('.ph-value');
 
-                const percentage = (pH / 14) * 100;
-                phIndicator.style.top = `${100 - percentage}%`;
-                phValue.textContent = `pH ${pH.toFixed(1)}`;
+      cursor.style.left = e.clientX - 10 + 'px';
+      cursor.style.top = e.clientY - 10 + 'px';
 
-                const cursorSize = Math.max(20, 50 - (distance / maxDistance) * 30);
-                cursor.style.width = cursorSize + 'px';
-                cursor.style.height = cursorSize + 'px';
-                cursor.style.left = e.clientX - cursorSize / 2 + 'px';
-                cursor.style.top = e.clientY - cursorSize / 2 + 'px';
-            }
-        });
+      if (realStart) {
+        const rect = realStart.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
 
-        createWords();
-        setInterval(createWords, 7000);
-    </script>
+        const maxDist = Math.hypot(window.innerWidth, window.innerHeight) / 2;
+        const pH = 14 - (distance / maxDist * 14);
+        const percent = (pH / 14) * 100;
+
+        phIndicator.style.top = `${100 - percent}%`;
+        phValue.textContent = `pH ${pH.toFixed(1)}`;
+
+        const size = Math.max(20, 50 - (distance / maxDist) * 30);
+        cursor.style.width = cursor.style.height = `${size}px`;
+        cursor.style.left = `${e.clientX - size / 2}px`;
+        cursor.style.top = `${e.clientY - size / 2}px`;
+      }
+    });
+
+    createWords();
+  </script>
 </body>
 </html>
